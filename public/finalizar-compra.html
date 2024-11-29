@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .navbar-nav .nav-item .nav-link.logged-in-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item .nav-link .icon {
+            margin-right: 8px;
+        }
+
+        .navbar-nav .nav-item .nav-link .logout-icon {
+            margin-left: 15px;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .summary {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary h4 {
+            margin-bottom: 20px;
+        }
+
+        .summary p {
+            font-size: 1.25rem;
+            margin: 10px 0;
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .payment-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .payment-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .payment-option img {
+            width: 35px;
+            margin-bottom: 10px;
+        }
+
+        .payment-option:hover, .payment-option.active {
+            border-color: #007bff;
+            background-color: #f1f8ff;
+        }
+
+        .payment-details {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .cart-item img {
+            height: 80px;
+            width: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+
+        .cart-item-info h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .cart-item-info p {
+            margin: 5px 0;
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user icon"></i> <span id="loggedInUser">Usuário Logado</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <h2>Finalizar Compra</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Informações do Usuário</h4>
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nome Completo</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Endereço</label>
+                        <input type="text" class="form-control" id="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city" class="form-label">Cidade</label>
+                        <input type="text" class="form-control" id="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state" class="form-label">Estado</label>
+                        <input type="text" class="form-control" id="state" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zip" class="form-label">CEP</label>
+                        <input type="text" class="form-control" id="zip" required>
+                    </div>
+                    <h4>Forma de Pagamento</h4>
+                    <div class="payment-options">
+                        <div class="payment-option" onclick="selectPayment('pix')">
+                            <img src="IMG-Base/pix-icon.png" alt="PIX">
+                            <p>PIX</p>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment('cartao')">
+                            <img src="IMG-Base/cartao-icon.png" alt="Cartão de Crédito">
+                            <p>Cartão de Crédito</p>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment('boleto')">
+                            <img src="IMG-Base/boleto-icon.png" alt="Boleto">
+                            <p>Boleto</p>
+                        </div>
+                    </div>
+                    <div id="pix-details" class="payment-details">
+                        <div class="form-group">
+                            <label for="pix-key" class="form-label">Chave PIX</label>
+                            <input type="text" class="form-control" id="pix-key">
+                        </div>
+                    </div>
+                    <div id="cartao-details" class="payment-details">
+                        <div class="form-group">
+                            <label for="card-number" class="form-label">Número do Cartão</label>
+                            <input type="text" class="form-control" id="card-number">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-name" class="form-label">Nome no Cartão</label>
+                            <input type="text" class="form-control" id="card-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-expiry" class="form-label">Data de Validade</label>
+                            <input type="text" class="form-control" id="card-expiry">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-cvv" class="form-label">CVV</label>
+                            <input type="text" class="form-control" id="card-cvv">
+                        </div>
+                    </div>
+                    <div id="boleto-details" class="payment-details">
+                        <button type="button" class="btn btn-primary" onclick="baixarBoleto()">Baixar Boleto</button>
+                    </div>
+                    <!-- Campo oculto para itens do pedido -->
+                    <input type="hidden" id="itens-pedido" name="itens-pedido">
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="summary">
+                    <h4>Resumo do Pedido</h4>
+                    <div id="order-summary">
+                        <!-- Itens do pedido serão inseridos dinamicamente aqui -->
+                    </div>
+                    <p class="total-amount">Total: R$<span id="order-total">0.00</span></p>
+                    <button class="btn btn-primary mt-3 w-100" id="finalizar-compra-btn">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="js/finalizar-compra.js"></script>
+    
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            // Função para selecionar a forma de pagamento
+                            window.selectPayment = (method) => {
+                                document.querySelectorAll('.payment-details').forEach(detail => detail.style.display = 'none');
+                                document.querySelectorAll('.payment-option').forEach(option => option.classList.remove('active'));
+                                document.querySelector(`.payment-option[onclick="selectPayment('${method}')"]`).classList.add('active');
+                                if (method === 'pix') {
+                                    document.getElementById('pix-details').style.display = 'block';
+                                } else if (method === 'cartao') {
+                                    document.getElementById('cartao-details').style.display = 'block';
+                                } else if (method === 'boleto') {
+                                    document.getElementById('boleto-details').style.display = 'block';
+                                }
+                            };
+                    
+                            // Função para baixar o boleto
+                            window.baixarBoleto = () => {
+                                alert('Baixando o boleto...');
+                                // Implementar lógica para download do boleto
+                            };
+                    
+                            // Função para carregar resumo do pedido
+                            const carregarResumoPedido = () => {
+                                fetch('/api/carrinho', { method: 'GET', credentials: 'same-origin' })
+                                    .then(response => response.json())
+                                    .then(itens => {
+                                        const orderSummary = document.getElementById('order-summary');
+                                        const totalElement = document.getElementById('order-total');
+                                        orderSummary.innerHTML = '';
+                                        let total = 0;
+                                        const itensPedido = [];
+                                        itens.forEach(item => {
+                                            total += item.preco * item.quantidade;
+                                            const itemElement = document.createElement('div');
+                                            itemElement.classList.add('cart-item');
+                                            itemElement.innerHTML = `
+                                                <img src="${item.imagem}" alt="${item.nome}">
+                                                <div class="cart-item-info">
+                                                    <h5>${item.nome}</h5>
+                                                    <p>Preço: R$${item.preco}</p>
+                                                    <p>Quantidade: ${item.quantidade}</p>
+                                                </div>
+                                                <div class="cart-item-total">
+                                                    <p>Total: R$${(item.preco * item.quantidade).toFixed(2)}</p>
+                                                </div>
+                                            `;
+                                            orderSummary.appendChild(itemElement);
+                                            itensPedido.push({ id_produto: item.id_produto, quantidade: item.quantidade });
+                                        });
+                                        totalElement.textContent = total.toFixed(2);
+                    
+                                        // Adicionar itens do pedido ao formulário para o pedido
+                                        document.getElementById('itens-pedido').value = JSON.stringify(itensPedido);
+                                    })
+                                    .catch(error => console.error('Erro ao carregar resumo do pedido:', error));
+                            };
+                    
+                            // Função para finalizar a compra
+                            const finalizarCompra = () => {
+                                fetch('/api/carrinho', { method: 'DELETE', credentials: 'same-origin' })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Erro ao limpar carrinho');
+                                        }
+                                        // Gerar o pedido no banco de dados
+                                        return fetch('/api/pedidos', { 
+                                            method: 'POST', 
+                                            credentials: 'same-origin',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                usuario: document.getElementById('loggedInUser').textContent,
+                                                itens: JSON.parse(document.getElementById('itens-pedido').value),
+                                                total: document.getElementById('order-total').textContent
+                                            })
+                                        });
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Erro ao gerar pedido');
+                                        }
+                                        // Redirecionar para a página de compra finalizada
+                                        window.location.href = 'compra-finalizada.html';
+                                    })
+                                    .catch(error => console.error('Erro ao finalizar a compra:', error));
+                            };
+                    
+                            // Chamar a função ao clicar no botão de finalizar compra
+                            document.getElementById('finalizar-compra-btn').addEventListener('click', () => {
+                                finalizarCompra();
+                            });
+                    
+                            // Carregar resumo do pedido ao carregar a página
+                            carregarResumoPedido();
+                        });
+                    </script>
+                    </body>
+                    </html>
+                    

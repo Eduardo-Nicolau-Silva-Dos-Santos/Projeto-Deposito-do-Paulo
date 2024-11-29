@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depósito do Paulo Victor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.navbar-brand img {
+    height: 40px; /* Ajuste a altura conforme necessário */
+}
+
+.navbar-nav {
+    margin-left: auto; /* Alinhar os itens do menu à direita */
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-item .nav-link.logged-in-user {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-item .nav-link .icon {
+    margin-right: 8px;
+}
+
+.navbar-nav .nav-item .nav-link .logout-icon {
+    margin-left: 15px;
+}
+
+.hero {
+    background: url('IMG-Base/banner-principal.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+}
+
+.btn-hero {
+    background-color: #ff5733;
+    color: white;
+    padding: 10px 30px;
+    font-size: 1.25rem;
+    border-radius: 5px;
+}
+
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.section-title {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user icon"></i> <span id="loggedInUser">Usuário Logado</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Bem-vindo ao Depósito do Paulo Victor</h1>
+            <p>Descubra os melhores materiais de construção com os melhores preços.</p>
+            <a href="produtos.html" class="btn btn-hero">Ver Produtos</a>
+        </div>
+    </section>
+
+    <!-- Seção de Produtos em Destaque -->
+    <section class="container">
+        <div class="section-title">
+            <h2>Produtos em Destaque</h2>
+        </div>
+        <div class="row" id="featured-products">
+            <!-- Produtos serão inseridos dinamicamente aqui -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Depósito do Paulo Victor. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Função para buscar e exibir o nome do usuário logado
+        const fetchUsuarioLogado = () => {
+            fetch('/api/usuario-logado', { method: 'GET', credentials: 'same-origin' })
+                .then(response => response.json())
+                .then(usuario => {
+                    document.getElementById('loggedInUser').textContent = usuario.nome;
+                    if (usuario.nivel_acesso === 'admin') {
+                        const adminItem = document.createElement('li');
+                        adminItem.innerHTML = '<a class="dropdown-item" href="admin-dashboard.html">Admin</a>';
+                        document.getElementById('userDropdown').appendChild(adminItem);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao obter informações do usuário logado:', error);
+                    document.getElementById('loggedInUser').textContent = 'Usuário Logado: Não identificado';
+                });
+        };
+    
+        // Chamar a função ao carregar a página
+        fetchUsuarioLogado();
+    
+        // Carregar produtos em destaque
+        fetch('/api/produtos-destaque')
+            .then(response => response.json())
+            .then(produtos => {
+                const featuredProductsContainer = document.getElementById('featured-products');
+                produtos.forEach(produto => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('col-md-4', 'mb-4', 'product-card');
+                    productCard.innerHTML = `
+                        <div class="card h-100">
+                            <img src="${produto.imagem}" class="card-img-top" alt="${produto.nome}">
+                            <div class="card-body">
+                                <h5 class="card-title">${produto.nome}</h5>
+                                <p class="card-text">${produto.descricao}</p>
+                                <p class="card-text"><strong>Preço:</strong> R$${produto.preco}</p>
+                                <a href="produtos.html?id=${produto.id}" class="btn btn-primary">Ver Mais</a>
+                            </div>
+                        </div>
+                    `;
+                    featuredProductsContainer.appendChild(productCard);
+                });
+            })
+            .catch(error => console.error('Erro ao carregar produtos em destaque:', error));
+    </script>
+    
+</body>
+</html>

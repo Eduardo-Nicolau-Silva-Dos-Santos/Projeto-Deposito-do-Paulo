@@ -1,0 +1,8 @@
+// Exemplo de consulta ao banco de dados
+connection.query('SELECT * FROM produtos', (err, results) => {
+  if (err) {
+    console.error('Erro ao executar a consulta: ', err);
+    return;
+  }
+  console.log('Resultados da consulta:', results);
+});

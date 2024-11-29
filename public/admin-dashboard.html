@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"> 
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-align: center;
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #575d63;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+            padding-top: 80px; /* Ajuste para evitar sobreposição da navbar */
+        }
+
+        .navbar {
+            background-color: #007bff;
+            position: fixed;
+            width: 100%;
+            z-index: 1;
+            top: 0;
+        }
+
+        .navbar-brand img {
+            height: 40px; /* Ajuste a altura conforme necessário */
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            margin-top: 20px; /* Adicionei uma margem superior para estilo e espaçamento */
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adicionei sombra para melhor visual */
+        }
+
+        .card-header {
+            background-color: #f8f9fa; /* Cor de fundo do cabeçalho do card */
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .card-body {
+            background-color: #fff;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .badge {
+            font-size: 0.9rem;
+        }
+
+        .list-group-item {
+            border: 0;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="admin-dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="admin-produtos.html"><i class="fas fa-box-open"></i> Produtos</a>
+        <a href="admin-pedidos.html"><i class="fas fa-receipt"></i> Pedidos</a>
+        <a href="admin-usuarios.html"><i class="fas fa-users"></i> Usuários</a>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user icon"></i> <span id="loggedInUser">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Status do Servidor</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <span id="serverStatus" class="badge bg-success">Online</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Total de Usuários</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 id="totalUsuarios"></h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Vendas Totais</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 id="totalVendas">R$ 0,00</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Produtos em Estoque</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <h3 id="totalProdutosEstoque">0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Resumo de Vendas</h5>
+                        </div>
+                        <div class="card-body chart-container">
+                            <canvas id="vendasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Produtos em Estoque</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul id="estoqueLista" class="list-group list-group-flush"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Pedidos Recentes</h5>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Usuário</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Data</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pedidosRecentes"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card de Total de Usuários -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Total de Usuários</h5>
+                    </div>
+                    <div class="card-body">
+                        <h3 id="totalUsuarios"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Status do Servidor -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Status do Servidor</h5>
+                    </div>
+                    <div class="card-body">
+                        <h3 id="serverStatus">Online</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Total de Vendas -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Total de Vendas</h5>
+                    </div>
+                    <div class="card-body">
+                        <h3 id="totalVendas">R$ 0,00</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Função para buscar e exibir o nome do usuário logado
+        const fetchUsuarioLogado = () => {
+            fetch('/api/usuario-logado', { method: 'GET', credentials: 'same-origin' })
+                .then(response => response.json())
+                .then(usuario => {
+                    document.getElementById('loggedInUser').textContent = usuario.nome;
+                })
+                .catch(error => {
+                    console.error('Erro ao obter informações do usuário logado:', error);
+                    document.getElementById('loggedInUser').textContent = 'Usuário Logado: Não identificado';
+                });
+        };
+
+        // Função para carregar a lista de produtos em estoque
+        const fetchProdutosEmEstoque = () => {
+            fetch('/api/produtos', { method: 'GET' })
+                .then(response => response.json())
+                .then(produtos => {
+                    const estoqueLista = document.getElementById('estoqueLista');
+                    estoqueLista.innerHTML = '';
+                    produtos.forEach(produto => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('list-group-item');
+                        listItem.textContent = `${produto.nome} - ${produto.estoque} unidades`;
+                        estoqueLista.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Erro ao carregar produtos em estoque:', error));
+        };
+
+        // Função para carregar a lista de pedidos recentes
+        const fetchPedidosRecentes = () => {
+            fetch('/api/pedidos', { method: 'GET' })
+                .then(response => response.json())
+                .then(pedidos => {
+                    const pedidosRecentes = document.getElementById('pedidosRecentes');
+                    pedidosRecentes.innerHTML = '';
+                    pedidos.forEach(pedido => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${pedido.id}</td>
+                            <td>${pedido.usuario}</td>
+                            <td>R$${pedido.total}</td>
+                            <td>${pedido.status}</td>
+                            <td>${new Date(pedido.data).toLocaleDateString()}</td>
+                        `;
+                        pedidosRecentes.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Erro ao carregar pedidos recentes:', error));
+        };
+
+        // Função para carregar o total de usuários
+        const fetchTotalUsuarios = () => {
+            fetch('/api/usuarios', { method: 'GET' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar usuários');
+                    }
+                    return response.json();
+                })
+                .then(usuarios => {
+                    document.getElementById('totalUsuarios').textContent = usuarios.length;
+                })
+                .catch(error => console.error('Erro ao carregar total de usuários:', error));
+        };
+
+        // Função para carregar o gráfico de vendas
+        const renderVendasChart = () => {
+            const vendasData = {
+                labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+                datasets: [{
+                    label: 'Vendas',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const vendasConfig = {
+                type: 'bar',
+                data: vendasData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            };
+
+            new Chart(document.getElementById('vendasChart'), vendasConfig);
+        };
+
+        // Função para exibir o status do servidor
+        const displayServerStatus = () => {
+            const serverStatusElement = document.getElementById('serverStatus');
+            serverStatusElement.textContent = 'Online';
+            serverStatusElement.classList.add('badge', 'bg-success');
+        };
+
+        // Função para carregar o total de vendas
+        const fetchTotalVendas = () => {
+            fetch('/api/vendas', { method: 'GET' })
+                .then(response => response.json())
+                .then(vendas => {
+                    const totalVendas = vendas.reduce((sum, venda) => sum + venda.total, 0);
+                    document.getElementById('totalVendas').textContent = `R$ ${totalVendas.toFixed(2)}`;
+                })
+                .catch(error => console.error('Erro ao carregar total de vendas:', error));
+        };
+
+        // Chamar todas as funções ao carregar a página
+        fetchUsuarioLogado();
+        fetchProdutosEmEstoque();
+        fetchPedidosRecentes();
+        fetchTotalUsuarios();
+        renderVendasChart();
+        displayServerStatus();
+        fetchTotalVendas();
+    });
+</script>
+</body>
+</html>

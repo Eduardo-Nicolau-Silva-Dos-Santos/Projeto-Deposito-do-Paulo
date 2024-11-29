@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nós - Depósito do Paulo Victor</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Estilos Customizados -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand img {
+            height: 40px; /* Ajuste a altura conforme necessário */
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .navbar-nav .nav-item .nav-link.logged-in-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item .nav-link .icon {
+            margin-right: 8px;
+        }
+
+        .navbar-nav .nav-item .nav-link .logout-icon {
+            margin-left: 15px;
+        }
+
+        .jumbotron {
+            color: white;
+            text-align: center;
+            background: url('/IMG-Base/banner-sobre.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .bg-dark {
+            background-color: #343a40 !important;
+        }
+
+        .text-white {
+            color: #fff !important;
+        }
+
+        .py-4 {
+            padding-top: 1.5rem !important;
+            padding-bottom: 1.5rem !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
+                <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user icon"></i> <span id="loggedInUser">Usuário Logado</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                        <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <!-- Banner -->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4 font-weight-bold">Quem Somos</h1>
+            <p class="lead">A paixão por construir o futuro com você nos move todos os dias.</p>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container my-5">
+        <!-- História -->
+        <section class="mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="mb-4 text-primary">Nossa História</h2>
+                    <p class="text-muted">
+                        O Depósito do Paulo Victor nasceu de um sonho de facilitar a vida de construtores e profissionais da área, oferecendo não apenas produtos de alta qualidade, mas também um atendimento que prioriza suas necessidades. Hoje, somos reconhecidos como um dos melhores depósitos de construção da região.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <img src="IMG-Base/historia.jpg" alt="Nossa História" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </section>
+
+        <!-- Valores e Missão -->
+        <section class="mb-5">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-star fa-3x text-primary mb-3"></i>
+                    <h4 class="text-secondary">Qualidade</h4>
+                    <p class="text-muted">Produtos que atendem os padrões mais exigentes do mercado.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
+                    <h4 class="text-secondary">Confiança</h4>
+                    <p class="text-muted">Construindo parcerias sólidas com nossos clientes.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <i class="fas fa-leaf fa-3x text-primary mb-3"></i>
+                    <h4 class="text-secondary">Sustentabilidade</h4>
+                    <p class="text-muted">Compromisso com o meio ambiente em todos os processos.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 Depósito do Paulo Victor. Todos os direitos reservados.</p>
+            <p>Desenvolvido com dedicação por nossa equipe.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

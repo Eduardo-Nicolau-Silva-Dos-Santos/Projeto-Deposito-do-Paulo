@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Negado</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .message-container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .message-container h1 {
+            color: #dc3545;
+        }
+        .message-container p {
+            font-size: 1.25rem;
+            color: #333;
+        }
+        .btn-home {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn-home:hover {
+            background-color: #0056b3;
+        }
+        .sad-face {
+            font-size: 5rem;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="sad-face">:(</div>
+        <h1>Acesso Negado</h1>
+        <p>Parece que você não tem permissão para acessar esta página.</p>
+        <button onclick="window.location.href='index.html'" class="btn-home">Voltar para a Página Inicial</button>
+    </div>
+</body>
+</html>

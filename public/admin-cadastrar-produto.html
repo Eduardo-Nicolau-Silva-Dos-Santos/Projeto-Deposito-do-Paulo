@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Cadastrar Produto</h2>
+        <form id="addProductForm" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="productName" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="productName" name="nome" required>
+            </div>
+            <div class="mb-3">
+                <label for="productDescription" class="form-label">Descrição</label>
+                <textarea class="form-control" id="productDescription" name="descricao" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="productPrice" class="form-label">Preço</label>
+                <input type="number" class="form-control" id="productPrice" name="preco" required>
+            </div>
+            <div class="mb-3">
+                <label for="productCategory" class="form-label">Categoria</label>
+                <select class="form-control" id="productCategory" name="categoria_id" required>
+                    <option value="1">Ferramentas Manuais</option>
+                    <option value="2">Ferramentas Elétricas</option>
+                    <option value="3">Materiais de Construção</option>
+                    <option value="4">Tijolos e Blocos</option>
+                    <option value="5">Cimento e Concreto</option>
+                    <option value="6">Pisos e Revestimentos</option>
+                    <option value="7">Tintas e Acessórios</option>
+                    <option value="8">Hidráulica</option>
+                    <option value="9">Elétrica</option>
+                    <option value="10">Madeiras</option>
+                    <option value="11">Portas e Janelas</option>
+                    <option value="12">Acessórios de Banheiro</option>
+                    <option value="13">Equipamentos de Segurança</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="productQuantity" class="form-label">Estoque</label>
+                <input type="number" class="form-control" id="productQuantity" name="estoque" required>
+            </div>
+            <div class="mb-3">
+                <label for="productImage" class="form-label">Imagem</label>
+                <input type="file" class="form-control" id="productImage" name="imagem" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/admin-cadastrar-produto.js"></script>
+</body>
+</html>

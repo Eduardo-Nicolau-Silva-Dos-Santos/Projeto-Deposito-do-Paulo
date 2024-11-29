@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand img {
+            height: 40px; /* Ajuste a altura conforme necessário */
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .navbar-nav .nav-item .nav-link.logged-in-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item .nav-link .icon {
+            margin-right: 8px;
+        }
+
+        .navbar-nav .nav-item .nav-link .logout-icon {
+            margin-left: 15px;
+        }
+
+        .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .filters {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user icon"></i> <span id="loggedInUser">Usuário Logado</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <div class="container my-4">
+        <!-- Barra de Busca e Filtros -->
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="filters">
+                    <h5 class="mb-3">Filtros</h5>
+                    <form>
+                        <div class="mb-3">
+                            <label for="categoria" class="form-label">Categoria</label>
+                            <select id="categoria" class="form-select" onchange="filtrarProdutos()">
+                                <option value="">Todas</option>
+                                <!-- Categorias serão adicionadas dinamicamente -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precoMin" class="form-label">Preço Mínimo</label>
+                            <input type="number" id="precoMin" class="form-control" placeholder="R$">
+                        </div>
+                        <div class="mb-3">
+                            <label for="precoMax" class="form-label">Preço Máximo</label>
+                            <input type="number" id="precoMax" class="form-control" placeholder="R$">
+                        </div>
+                        <button type="button" class="btn btn-primary w-100" onclick="filtrarProdutos()">Aplicar Filtros</button>
+                    </form>
+                    <div class="mb-3">
+                        <label for="ordem" class="form-label">Ordenar por</label>
+                        <select id="ordem" class="form-select" onchange="ordenarProdutos()">
+                            <option value="preco-asc">Preço: Menor para Maior</option>
+                            <option value="preco-desc">Preço: Maior para Menor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <!-- Barra de Busca -->
+                <div class="input-group mb-4">
+                    <input type="text" class="form-control" id="search" placeholder="Busque produtos...">
+                    <button class="btn btn-primary" type="button" onclick="filtrarProdutos()">Buscar</button>
+                </div>
+
+                <!-- Lista de Produtos -->
+                <div class="row" id="produtos-lista">
+                    <!-- Produtos dinâmicos serão carregados aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar ao Carrinho -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Detalhes do Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalProductImage" src="" class="img-fluid mb-3" alt="Produto">
+                    <h5 id="modalProductName"></h5>
+                    <p id="modalProductDescription"></p>
+                    <p><strong>Preço:</strong> R$<span id="modalProductPrice"></span></p>
+                    <div class="mb-3">
+                        <label for="modalProductQuantity" class="form-label">Quantidade</label>
+                        <input type="number" id="modalProductQuantity" class="form-control" value="1" min="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Função para buscar e exibir o nome do usuário logado
+            const fetchUsuarioLogado = () => {
+                fetch('/api/usuario-logado', { method: 'GET', credentials: 'same-origin' })
+                    .then(response => response.json())
+                    .then(usuario => {
+                        document.getElementById('loggedInUser').textContent = usuario.nome;
+                        if (usuario.nivel_acesso === 'admin') {
+                            const adminItem = document.createElement('li');
+                            adminItem.innerHTML = '<a class="dropdown-item" href="admin-dashboard.html">Admin</a>';
+                            document.getElementById('userDropdown').appendChild(adminItem);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao obter informações do usuário logado:', error);
+                        document.getElementById('loggedInUser').textContent = 'Usuário Logado: Não identificado';
+                    });
+            };
+            // Chamar a função ao carregar a página
+            fetchUsuarioLogado();
+
+                        // Função para carregar produtos
+                        const carregarProdutos = () => {
+                fetch('/api/produtos', { method: 'GET' })
+                    .then(response => response.json())
+                    .then(produtos => {
+                        const produtosLista = document.getElementById('produtos-lista');
+                        const categoriaSelect = document.getElementById('categoria');
+                        
+                        // Renderizar categorias dinamicamente
+                        const categorias = [...new Set(produtos.map(produto => produto.categoria))];
+                        categoriaSelect.innerHTML = '<option value="">Todas</option>';
+                        categorias.forEach(categoria => {
+                            const option = document.createElement('option');
+                            option.value = categoria;
+                            option.textContent = categoria;
+                            categoriaSelect.appendChild(option);
+                        });
+                        
+                        // Renderizar produtos dinamicamente
+                        produtosLista.innerHTML = '';
+                        produtos.forEach(produto => {
+                            const produtoCard = `
+                                <div class="col-md-4 mb-4 produto-card" data-nome="${produto.nome}" data-categoria="${produto.categoria}" data-preco="${produto.preco}">
+                                    <div class="card product-card">
+                                        <img src="${produto.imagem}" class="card-img-top" alt="${produto.nome}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${produto.nome}</h5>
+                                            <p class="card-text">${produto.descricao}</p>
+                                            <p class="text-primary fw-bold">R$ ${produto.preco}</p>
+                                            <button class="btn btn-primary w-100" onclick="abrirModal(${produto.id})">Adicionar ao Carrinho</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            produtosLista.insertAdjacentHTML('beforeend', produtoCard);
+                        });
+
+                        // Chame as funções de filtro e ordenação após renderizar os produtos
+                        filtrarProdutos();
+                        ordenarProdutos();
+                    })
+                    .catch(error => console.error('Erro ao carregar produtos:', error));
+            };
+
+            // Função para filtrar produtos
+            window.filtrarProdutos = () => {
+                const search = document.getElementById('search').value.toLowerCase();
+                const categoria = document.getElementById('categoria').value;
+                const precoMin = parseFloat(document.getElementById('precoMin').value) || 0;
+                const precoMax = parseFloat(document.getElementById('precoMax').value) || Infinity;
+
+                const produtos = document.querySelectorAll('.produto-card');
+
+                produtos.forEach(produto => {
+                    const nome = produto.dataset.nome.toLowerCase();
+                    const categoriaProduto = produto.dataset.categoria;
+                    const precoProduto = parseFloat(produto.dataset.preco);
+
+                    const exibe = 
+                        (!search || nome.includes(search)) && 
+                        (!categoria || categoriaProduto === categoria) && 
+                        (precoProduto >= precoMin) && 
+                        (precoProduto <= precoMax);
+
+                    produto.style.display = exibe ? 'block' : 'none';
+                });
+            }
+
+            // Função para ordenar produtos
+            window.ordenarProdutos = () => {
+                const ordem = document.getElementById('ordem').value;
+                const lista = document.getElementById('produtos-lista');
+                const produtos = Array.from(lista.children);
+
+                produtos.sort((a, b) => {
+                    const precoA = parseFloat(a.dataset.preco);
+                    const precoB = parseFloat(b.dataset.preco);
+
+                    if (ordem === 'preco-asc') return precoA - precoB;
+                    if (ordem === 'preco-desc') return precoB - precoA;
+                    return 0;
+                });
+
+                produtos.forEach(produto => lista.appendChild(produto));
+            }
+
+            // Função para abrir o modal com os detalhes do produto
+            window.abrirModal = (produtoId) => {
+                fetch(`/api/produtos/${produtoId}`, { method: 'GET' })
+                    .then(response => response.json())
+                    .then(produto => {
+                        document.getElementById('modalProductImage').src = produto.imagem;
+                        document.getElementById('modalProductName').textContent = produto.nome;
+                        document.getElementById('modalProductDescription').textContent = produto.descricao;
+                        document.getElementById('modalProductPrice').textContent = produto.preco;
+                        document.getElementById('modalProductQuantity').value = 1; // Resetar a quantidade para 1
+                        document.getElementById('productModal').setAttribute('data-produto-id', produto.id);
+                        const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+                        productModal.show();
+                    })
+                    .catch(error => console.error('Erro ao carregar detalhes do produto:', error));
+            };
+
+            // Função para adicionar o produto ao carrinho
+            window.adicionarAoCarrinho = () => {
+                const produtoId = document.getElementById('productModal').getAttribute('data-produto-id');
+                const quantidade = document.getElementById('modalProductQuantity').value;
+                fetch('/api/carrinho', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ produtoId, quantidade })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Produto adicionado ao carrinho com sucesso!');
+                        const productModal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                        productModal.hide();
+                    } else {
+                        alert('Erro ao adicionar produto ao carrinho.');
+                    }
+                })
+                .catch(error => console.error('Erro ao adicionar produto ao carrinho:', error));
+            };
+
+            // Chamar a função ao carregar a página
+            carregarProdutos();
+        });
+    </script>
+</body>
+</html>

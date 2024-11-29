@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #007bff;
+}
+
+.navbar-brand img {
+    height: 40px; /* Ajuste a altura conforme necessário */
+}
+
+.navbar-nav {
+    margin-left: auto; /* Alinhar os itens do menu à direita */
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-nav .nav-item .nav-link.logged-in-user {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-item .nav-link .icon {
+    margin-right: 8px;
+}
+
+.navbar-nav .nav-item .nav-link .logout-icon {
+    margin-left: 15px;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.cart-header, .cart-footer {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.cart-item img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.cart-item-info h5 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.cart-item-info p {
+    margin: 5px 0;
+    color: #666666;
+}
+
+.cart-item-actions {
+    text-align: right;
+}
+
+.cart-item-actions button {
+    margin-left: 10px;
+}
+
+.empty-cart-message {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.empty-cart-message i {
+    font-size: 4rem;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="sobre.html">Sobre</a></li>
+                <li class="nav-item"><a class="nav-link" href="produtos.html">Produtos</a></li>
+                <li class="nav-item"><a class="nav-link" href="carrinho.html">Carrinho</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user icon"></i> <span id="loggedInUser">Usuário Logado</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                        <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    <!-- Conteúdo do Carrinho -->
+    <div class="container my-4">
+        <div class="cart-header">
+            <h2>Carrinho de Compras</h2>
+        </div>
+        <div id="carrinho-lista">
+            <!-- Itens do carrinho serão inseridos dinamicamente aqui -->
+        </div>
+        <div id="empty-cart" class="empty-cart-message" style="display: none;">
+            <i class="fas fa-frown"></i>
+            <p>Parece que seu carrinho está vazio <span class="fas fa-sad-tear"></span></p>
+        </div>
+        <div class="cart-footer text-end mt-4">
+            <div class="total-amount">
+                Total: R$<span id="total-amount">0.00</span>
+            </div>
+            <button class="btn btn-primary mt-2" onclick="finalizarCompra()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Função para buscar e exibir o nome do usuário logado
+            const fetchUsuarioLogado = () => {
+                fetch('/api/usuario-logado', { method: 'GET', credentials: 'same-origin' })
+                    .then(response => response.json())
+                    .then(usuario => {
+                        document.getElementById('loggedInUser').textContent = usuario.nome;
+                        if (usuario.nivel_acesso === 'admin') {
+                            const adminItem = document.createElement('li');
+                            adminItem.innerHTML = '<a class="dropdown-item" href="admin-dashboard.html">Admin</a>';
+                            document.getElementById('userDropdown').appendChild(adminItem);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao obter informações do usuário logado:', error);
+                        document.getElementById('loggedInUser').textContent = 'Usuário Logado: Não identificado';
+                    });
+            };
+
+            // Chamar a função ao carregar a página
+            fetchUsuarioLogado();
+
+            // Função para carregar itens do carrinho
+            const carregarCarrinho = () => {
+                fetch('/api/carrinho', { method: 'GET', credentials: 'same-origin' })
+                    .then(response => response.json())
+                    .then(itens => {
+                        const carrinhoLista = document.getElementById('carrinho-lista');
+                        const emptyCartMessage = document.getElementById('empty-cart');
+                        const totalAmountElement = document.getElementById('total-amount');
+                        carrinhoLista.innerHTML = '';
+                        let totalAmount = 0;
+                        if (itens.length === 0) {
+                            emptyCartMessage.style.display = 'block';
+                        } else {
+                            emptyCartMessage.style.display = 'none';
+                            itens.forEach(item => {
+                                totalAmount += item.preco * item.quantidade;
+                                const itemCard = document.createElement('div');
+                                itemCard.classList.add('cart-item');
+                                itemCard.innerHTML = `
+                                    <img src="${item.imagem}" alt="${item.nome}">
+                                    <div class="cart-item-info">
+                                        <h5>${item.nome}</h5>
+                                        <p>Preço: R$${item.preco}</p>
+                                        <p>Quantidade: ${item.quantidade}</p>
+                                    </div>
+                                    <div class="cart-item-actions">
+                                        <button class="btn btn-danger" onclick="removerDoCarrinho('${item.id_produto}')">Remover</button>
+                                    </div>
+                                `;
+                                carrinhoLista.appendChild(itemCard);
+                            });
+                            totalAmountElement.textContent = totalAmount.toFixed(2);
+                        }
+                    })
+                    .catch(error => console.error('Erro ao carregar itens do carrinho:', error));
+            };
+
+            // Função para remover item do carrinho
+            window.removerDoCarrinho = (produtoId) => {
+                fetch(`/api/carrinho/${produtoId}`, { method: 'DELETE', credentials: 'same-origin' })
+                    .then(response => {
+                        if (response.ok) {
+                            carregarCarrinho();
+                        } else {
+                            alert('Erro ao remover item do carrinho.');
+                        }
+                    })
+                    .catch(error => console.error('Erro ao remover item do carrinho:', error));
+            };
+
+                        // Função para finalizar a compra
+                        window.finalizarCompra = () => {
+                window.location.href = 'finalizar-compra.html';
+            };
+
+            // Chamar a função ao carregar a página
+            carregarCarrinho();
+        });
+    </script>
+</body>
+</html>

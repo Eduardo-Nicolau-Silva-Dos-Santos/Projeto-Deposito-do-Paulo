@@ -1,0 +1,62 @@
+<% /* Página de Produtos */ %>
+<main class="container mt-4">
+    <h1 class="text-center mb-4">Produtos Disponíveis</h1>
+
+    <!-- Filtros e Busca -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <input 
+                type="text" 
+                id="search" 
+                class="form-control" 
+                placeholder="Buscar produtos..." 
+                onkeyup="filtrarProdutos()"
+            />
+        </div>
+        <div class="col-md-4">
+            <select id="categorias" class="form-control" onchange="filtrarProdutos()">
+                <option value="">Todas as Categorias</option>
+                <% categorias.forEach(categoria => { %>
+                    <option value="<%= categoria %>"><%= categoria %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select id="ordem" class="form-control" onchange="ordenarProdutos()">
+                <option value="">Ordenar por</option>
+                <option value="preco-asc">Preço (Menor para Maior)</option>
+                <option value="preco-desc">Preço (Maior para Menor)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Lista de Produtos -->
+    <div class="row" id="produtos-lista">
+        <% if (produtos.length > 0) { %>
+            <% produtos.forEach(produto => { %>
+                <div class="col-md-4 mb-4 produto-card" data-nome="<%= produto.nome %>" data-categoria="<%= produto.categoria %>" data-preco="<%= produto.preco %>">
+                    <div class="card h-100">
+                        <img 
+                            src="<%= produto.imagem ? produto.imagem : '/img/default.jpg' %>" 
+                            class="card-img-top" 
+                            alt="<%= produto.nome %>"
+                        />
+                        <div class="card-body">
+                            <h5 class="card-title"><%= produto.nome %></h5>
+                            <p class="card-text"><%= produto.descricao %></p>
+                            <p><strong>Preço:</strong> R$ <%= produto.preco.toFixed(2) %></p>
+                            <p><strong>Categoria:</strong> <%= produto.categoria %></p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-block">Adicionar ao Carrinho</button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p class="text-center">Nenhum produto disponível no momento.</p>
+        <% } %>
+    </div>
+</main>
+
+<script src="/js/produtos.js"></script>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Usuários</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-align: center;
+            display: block;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #575d63;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            position: fixed;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .navbar-brand img {
+            height: 40px; /* Ajuste a altura conforme necessário */
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .badge {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="admin-produtos.html"><i class="fas fa-box-open"></i> Produtos</a>
+        <a href="admin-pedidos.html" class="active"><i class="fas fa-receipt"></i> Pedidos</a>
+        <a href="admin-usuarios.html"><i class="fas fa-users"></i> Usuários</a>
+        <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="IMG-Base/logo.jpeg" alt="Depósito do Paulo Victor"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle logged-in-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user icon"></i> <span id="loggedInUser">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="userDropdown">
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt logout-icon"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Gerenciar Usuários</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary btn-add-user" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                        <i class="fas fa-user-plus"></i> Adicionar Usuário
+                    </button>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Telefone</th>
+                                    <th>Nível de Acesso</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usuariosLista"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar Usuário -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Adicionar Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm">
+                        <div class="mb-3">
+                            <label for="addUserName" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="addUserName" required autocomplete="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addUserEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="addUserEmail" required autocomplete="email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addUserPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="addUserPassword" required autocomplete="new-password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addUserPhone" class="form-label">Telefone</label>
+                            <input type="text" class="form-control" id="addUserPhone" required autocomplete="tel">
+                        </div>
+                        <div class="mb-3">
+                            <label for="addUserRole" class="form-label">Nível de Acesso</label>
+                            <select class="form-control" id="addUserRole" required>
+                                <option value="usuario">Usuário</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Modal para Editar Usuário -->
+        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editUserModalLabel">Editar Usuário</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editUserForm">
+                            <div class="form-group">
+                                <label for="editUserName">Nome</label>
+                                <input type="text" class="form-control" id="editUserName" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserEmail">Email</label>
+                                <input type="email" class="form-control" id="editUserEmail" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserPhone">Telefone</label>
+                                <input type="text" class="form-control" id="editUserPhone" name="telefone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editUserAccessLevel">Nível de Acesso</label>
+                                <select class="form-control" id="editUserAccessLevel" name="nivel_acesso" required>
+                                    <option value="usuario">Usuário</option>
+                                    <option value="admin">Administrador</option>
+                                </select>
+                            </div>
+                            <input type="hidden" id="editUserId" name="id">
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="js/admin-usuarios.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const usuariosLista = document.getElementById('usuariosLista');
+                const addUserForm = document.getElementById('addUserForm');
+                const editUserForm = document.getElementById('editUserForm');
+                const loggedInUserElement = document.getElementById('loggedInUser');
+    
+                // Função para buscar e exibir o nome do usuário logado
+                const fetchUsuarioLogado = () => {
+                    fetch('/api/usuario-logado', { method: 'GET', credentials: 'same-origin' })
+                        .then(response => response.json())
+                        .then(usuario => {
+                            loggedInUserElement.textContent = `Usuário Logado: ${usuario.nome}`;
+                        })
+                        .catch(error => {
+                            console.error('Erro ao obter informações do usuário logado:', error);
+                            loggedInUserElement.textContent = 'Usuário Logado: Não identificado';
+                        });
+                };
+    
+                // Função para buscar e renderizar a lista de usuários
+                const fetchUsuarios = () => {
+                    fetch('/api/usuarios', { method: 'GET', credentials: 'same-origin' })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok ' + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            usuariosLista.innerHTML = '';
+                            data.forEach(usuario => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${usuario.id}</td>
+                                    <td>${usuario.nome}</td>
+                                    <td>${usuario.email}</td>
+                                    <td>${usuario.telefone}</td>
+                                    <td>${usuario.nivel_acesso}</td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="editUsuario(${usuario.id})">Editar</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteUsuario(${usuario.id})">Excluir</button>
+                                    </td>
+                                `;
+                                usuariosLista.appendChild(row);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Erro ao carregar usuários:', error);
+                            alert('Erro ao carregar usuários: ' + error.message);
+                        });
+                };
+    
+                // Função para adicionar um novo usuário
+                addUserForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+    
+                    const formData = new FormData(addUserForm);
+    
+                    fetch('/api/usuarios', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro na rede: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            $('#addUserModal').modal('hide');
+                            fetchUsuarios();
+                        } else {
+                            alert('Erro ao adicionar usuário');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao adicionar usuário:', error);
+                        alert('Erro ao adicionar usuário: ' + error.message);
+                    });
+                });
+    
+                // Função para editar um usuário
+                window.editUsuario = (id) => {
+                    fetch(`/api/usuarios/${id}`, { method: 'GET', credentials: 'same-origin' })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro ao buscar usuário');
+                            }
+                            return response.json();
+                        })
+                        .then(usuario => {
+                            document.getElementById('editUserId').value = usuario.id;
+                            document.getElementById('editUserName').value = usuario.nome;
+                            document.getElementById('editUserEmail').value = usuario.email;
+                            document.getElementById('editUserPhone').value = usuario.telefone;
+                            document.getElementById('editUserAccessLevel').value = usuario.nivel_acesso;
+    
+                            // Use jQuery to show the modal
+                            $('#editUserModal').modal('show');
+                        })
+                        .catch(error => console.error('Erro ao buscar usuário:', error));
+                };
+    
+                // Função para salvar as alterações do usuário
+                editUserForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+    
+                    const usuarioId = document.getElementById('editUserId').value;
+                    const formData = new FormData(editUserForm);
+    
+                    const data = {
+                        nome: formData.get('nome'),
+                        email: formData.get('email'),
+                        telefone: formData.get('telefone'),
+                        nivel_acesso: formData.get('nivel_acesso')
+                    };
+    
+                    fetch(`/api/usuarios/${usuarioId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao atualizar o usuário: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            $('#editUserModal').modal('hide');
+                            fetchUsuarios();
+                        } else {
+                            alert('Erro ao salvar alterações do usuário');
+                        }
+                    })
+                    .catch(error => console.error('Erro ao salvar alterações do usuário:', error));
+                });
+    
+                // Função para excluir um usuário
+                window.deleteUsuario = (id) => {
+                    if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                        fetch(`/api/usuarios/${id}`, {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro ao excluir usuário');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                fetchUsuarios();
+                            } else {
+                                alert('Erro ao excluir usuário');
+                            }
+                        })
+                        .catch(error => console.error('Erro ao excluir usuário:', error));
+                    }
+                };
+    
+                // Carregar a lista de usuários e informações do usuário logado ao carregar a página
+                fetchUsuarios();
+                fetchUsuarioLogado();
+            });
+        </script>
+    </body>
+    </html>
+    
